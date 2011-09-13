@@ -14,8 +14,18 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-require 'haml_coffee/version'
+require 'execjs'
+require 'coffee-script'
 
 module HamlCoffee
-  # 
+  SCRIPT_PATH = File.read(File.expand_path('../haml_coffee/haml-coffee.js', __FILE__))
+
+  def self.compile(source, options = {})
+    @context ||= ExecJS.compile(SCRIPT_PATH)
+
+    namespace = options[:namespace] || 'HAML'
+    filename = options[:filename] || 'template'
+
+    CoffeeScript.compile(@context.call('compile', namespace, filename, source))
+  end
 end
