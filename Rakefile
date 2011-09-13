@@ -19,6 +19,8 @@ require 'rspec/core/rake_task'
 
 task :default => :build
 
+RSpec::Core::RakeTask.new
+
 task :generatejs do
   input = Pathname.new('vendor/haml-coffee/lib/compiler.js')
   output = Pathname.new('lib/haml_coffee/haml-coffee.js')
