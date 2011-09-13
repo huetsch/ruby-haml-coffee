@@ -14,20 +14,24 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-require 'execjs'
-require 'coffee-script'
-
-require 'haml_coffee/tilt_template' if defined?(Tilt)
-
 module HamlCoffee
-  SCRIPT_PATH = File.read(File.expand_path('../haml_coffee/haml-coffee.js', __FILE__))
+  class TiltTemplate < Tilt::Template
+    def self.default_mime_type
+      'application/javascript'
+    end
 
-  def self.compile(source, options = {})
-    @context ||= ExecJS.compile(SCRIPT_PATH)
+    def prepare ; end
 
-    namespace = options[:namespace] || 'HAML'
-    filename = options[:filename] || 'template'
+    def evaluate(scope, locals = {}, &block)
+      filename = if scope.respond_to?(:logical_path) # Sprockets
+                   scope.logical_path
+                 elsif scope.respond_to?(:filename)
+                   scope.filename
+                 elsif locals.key?(:filename)
+                   locals[:filename]
+                 end
 
-    CoffeeScript.compile(@context.call('compile', namespace, filename, source))
+      HamlCoffee.compile(data, :filename => filename)
+    end
   end
 end
