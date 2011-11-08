@@ -1,0 +1,3 @@
+[submodule "vendor/haml-coffee"]
+	path = vendor/haml-coffee
+	url = git://github.com/huetsch/haml-coffee.git
