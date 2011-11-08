@@ -1,3 +1,0 @@
-[submodule "vendor/haml-coffee"]
-	path = vendor/haml-coffee
-	url = https://github.com/9elements/haml-coffee.git
